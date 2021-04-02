@@ -1,7 +1,6 @@
 name: floating
 description: Picture in Picture mode management for Flutter.
 version: 0.0.1
-author: Marcin Wróblewski
 homepage: https://gitlab.com/nicram606/floating
 
 environment:
