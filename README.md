@@ -2,6 +2,8 @@
 
 Picture in Picture management for Flutter. **Android only**
 
+![Picture in picture demo](assets/example.gif)
+
 ## API
 
 PiP mode in desired mode is available only in Android
