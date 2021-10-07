@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:floating/floating.dart';
 
 void main() {
@@ -46,9 +45,16 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Floating example app'),
         ),
         body: Center(
-          child: Text('PiP available: $isPipSupported\nPiP enabled: $isPipEnabled'),
+          child: Text(
+              'PiP available: $isPipSupported\nPiP enabled: $isPipEnabled'),
         ),
-        floatingActionButton: isPipSupported ?? false ? FloatingActionButton.extended(onPressed: enablePip, label: Text('Enable PiP'), icon: const Icon(Icons.picture_in_picture),) : null,
+        floatingActionButton: isPipSupported ?? false
+            ? FloatingActionButton.extended(
+                onPressed: enablePip,
+                label: Text('Enable PiP'),
+                icon: const Icon(Icons.picture_in_picture),
+              )
+            : null,
       ),
     );
   }
