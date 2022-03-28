@@ -4,6 +4,19 @@ Picture in Picture management for Flutter. **Android only**
 
 ![Picture in picture demo](assets/example.gif)
 
+## Let the OS know the app is PiP ready
+
+Add `android:supportsPictureInPicture="true"` line to the `<activity>` tag in `android/src/main/AndroidManifest.xml`:
+
+```xml
+<manifest>
+   <application>
+        <activity
+            android:name=".MainActivity"
+            android:supportsPictureInPicture="true"
+            ...
+```
+
 ## API
 
 PiP mode in desired mode is available only in Android

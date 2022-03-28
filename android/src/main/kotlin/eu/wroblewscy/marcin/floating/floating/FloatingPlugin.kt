@@ -16,6 +16,8 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import java.util.*
+import kotlin.concurrent.fixedRateTimer
 
 /** FloatingPlugin */
 class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -26,6 +28,7 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   private lateinit var channel: MethodChannel
   private lateinit var context: Context
   private lateinit var activity: Activity
+  private lateinit var timer: Timer
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "floating")
@@ -59,18 +62,26 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   override fun onDetachedFromActivity() {
-    TODO("Not yet implemented")
+    cleanup()
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-    TODO("Not yet implemented")
+    useBinding(binding)
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-    activity = binding.activity
+    useBinding(binding)
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
-    TODO("Not yet implemented")
+    cleanup()
+  }
+
+  fun useBinding(binding: ActivityPluginBinding) {
+    activity = binding.activity
+  }
+
+  fun cleanup() {
+    timer.cancel()
   }
 }

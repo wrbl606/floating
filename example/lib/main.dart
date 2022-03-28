@@ -13,49 +13,45 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool isPipEnabled, isPipSupported;
+  final floating = Floating();
 
   @override
-  void initState() {
-    super.initState();
-    checkPipSupport();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> checkPipSupport() async {
-    final isPipSupported = await Floating.isPipAvailable;
-    final isPipEnabled = await Floating.isInPipMode;
-    setState(() {
-      this.isPipSupported = isPipSupported;
-      this.isPipEnabled = isPipEnabled;
-    });
+  void dispose() {
+    floating.dispose();
+    super.dispose();
   }
 
   Future<void> enablePip() async {
-    final enabledSuccessfully = await Floating.enablePip();
-    print('PiP enabled? $enabledSuccessfully');
-    await checkPipSupport();
+    final status = await Floating().enable();
+    debugPrint('PiP enabled? $status');
   }
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Floating example app'),
+  Widget build(BuildContext context) => MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Floating example app'),
+          ),
+          body: Center(
+            child: StreamBuilder<PiPStatus>(
+              stream: floating.pipStatus$,
+              initialData: PiPStatus.unavailable,
+              builder: (context, snapshot) =>
+                  Text('PiP status: ${snapshot.data}'),
+            ),
+          ),
+          floatingActionButton: StreamBuilder<PiPStatus>(
+            stream: floating.pipStatus$,
+            initialData: PiPStatus.unavailable,
+            builder: (context, snapshot) =>
+                snapshot.data != PiPStatus.unavailable
+                    ? FloatingActionButton.extended(
+                        onPressed: enablePip,
+                        label: Text('Enable PiP'),
+                        icon: const Icon(Icons.picture_in_picture),
+                      )
+                    : null,
+          ),
         ),
-        body: Center(
-          child: Text(
-              'PiP available: $isPipSupported\nPiP enabled: $isPipEnabled'),
-        ),
-        floatingActionButton: isPipSupported ?? false
-            ? FloatingActionButton.extended(
-                onPressed: enablePip,
-                label: Text('Enable PiP'),
-                icon: const Icon(Icons.picture_in_picture),
-              )
-            : null,
-      ),
-    );
-  }
+      );
 }
