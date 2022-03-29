@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> enablePip() async {
-    final status = await Floating().enable();
+    final status = await floating.enable();
     debugPrint('PiP enabled? $status');
   }
 
@@ -33,24 +33,26 @@ class _MyAppState extends State<MyApp> {
             title: const Text('Floating example app'),
           ),
           body: Center(
-            child: StreamBuilder<PiPStatus>(
-              stream: floating.pipStatus$,
-              initialData: PiPStatus.unavailable,
-              builder: (context, snapshot) =>
-                  Text('PiP status: ${snapshot.data}'),
+            child: PiPSwitcher(
+              childWhenDisabled: const Text('disabled'),
+              childWhenEnabled: const Text('enabled'),
             ),
           ),
-          floatingActionButton: StreamBuilder<PiPStatus>(
-            stream: floating.pipStatus$,
-            initialData: PiPStatus.unavailable,
-            builder: (context, snapshot) =>
-                snapshot.data != PiPStatus.unavailable
-                    ? FloatingActionButton.extended(
-                        onPressed: enablePip,
-                        label: Text('Enable PiP'),
-                        icon: const Icon(Icons.picture_in_picture),
-                      )
-                    : null,
+          floatingActionButton: FutureBuilder<bool>(
+            future: floating.isPipAvailable,
+            initialData: false,
+            builder: (context, snapshot) => snapshot.data
+                ? PiPSwitcher(
+                    childWhenDisabled: FloatingActionButton.extended(
+                      onPressed: enablePip,
+                      label: const Text('Enable PiP'),
+                      icon: const Icon(Icons.picture_in_picture),
+                    ),
+                    childWhenEnabled: const SizedBox(),
+                  )
+                : const Card(
+                    child: Text('PiP unavailable'),
+                  ),
           ),
         ),
       );

@@ -1,30 +1,27 @@
 part of floating;
 
-// Widget switching utility.
-//
-// Depending on current PiP status will render [childWhenEnabled]
-// or [childWhenDisabled] widget.
+/// Widget switching utility.
+///
+/// Depending on current PiP status will render [childWhenEnabled]
+/// or [childWhenDisabled] widget.
 class PiPSwitcher extends StatefulWidget {
-  // Child to render when PiP is enabled
+  /// Floating instance that the listener will connect to.
+  ///
+  /// It may be provided by the instance user. If not, the widget
+  /// will create it's own Floating instance.
+  final Floating? floating;
+
+  /// Child to render when PiP is enabled
   final Widget childWhenEnabled;
 
-  // Child to render when PiP is disabled or unavailable.
+  /// Child to render when PiP is disabled or unavailable.
   final Widget childWhenDisabled;
 
-  // PiP status probe interval.
-  //
-  // By default it's set to 100 milliseconds since the system
-  // applies a transition when the activity is switching modes
-  // so there's plenty of time for this widget to act on that change.
-  // Shorter duration will result with snappier widget switching
-  // with a small performance impact.
-  final Duration probeInterval;
-
-  const PiPSwitcher({
+  PiPSwitcher({
     Key? key,
-    this.probeInterval = const Duration(milliseconds: 100),
     required this.childWhenEnabled,
     required this.childWhenDisabled,
+    this.floating,
   }) : super(key: key);
 
   @override
@@ -32,11 +29,19 @@ class PiPSwitcher extends StatefulWidget {
 }
 
 class _PipAwareState extends State<PiPSwitcher> {
-  final _floating = Floating();
+  late final Floating _floating = widget.floating ?? Floating();
 
   @override
   void dispose() {
-    _floating.dispose();
+    /// Dispose the floating instance only if it was created
+    /// by this widget.
+    ///
+    /// Floating instance can be also provided by the user of this
+    /// widget. If so, it's the user's responsibility to dispose
+    /// it when necessary.
+    if (widget.floating == null) {
+      _floating.dispose();
+    }
     super.dispose();
   }
 

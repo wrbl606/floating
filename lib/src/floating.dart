@@ -11,6 +11,7 @@ class Floating {
   final _controller = StreamController<PiPStatus>();
   final Duration _probeInterval;
   Timer? _timer;
+  Stream<PiPStatus>? _stream;
 
   Floating({
     Duration probeInterval = const Duration(milliseconds: 100),
@@ -54,7 +55,8 @@ class Floating {
       _probeInterval,
       (_) async => _controller.add(await pipStatus),
     );
-    return _controller.stream.distinct();
+    _stream ??= _controller.stream.asBroadcastStream();
+    return _stream!.distinct();
   }
 
   /// Turns on PiP mode.
