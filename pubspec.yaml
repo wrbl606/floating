@@ -1,6 +1,6 @@
 name: floating
-description: Picture in Picture mode management for Flutter. Available only for Android since web and iOS does not natively support such mode.
-version: 1.0.0
+description: Picture in Picture mode management for Flutter. Available only for Android.
+version: 1.1.0
 homepage: https://gitlab.com/nicram606/floating
 
 environment:
