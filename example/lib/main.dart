@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> enablePip() async {
-    final status = await floating.enable();
+    final status = await floating.enable(Rational.landscape());
     debugPrint('PiP enabled? $status');
   }
 

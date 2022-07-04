@@ -5,6 +5,7 @@ import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Rational
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
 
@@ -40,7 +41,16 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     if (call.method == "enablePip") {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        result.success(activity.enterPictureInPictureMode(PictureInPictureParams.Builder().build()))
+        result.success(
+            activity.enterPictureInPictureMode(
+                PictureInPictureParams.Builder()
+                    .setAspectRatio(Rational(
+                        call.argument("numerator") ?: 16,
+                        call.argument("denominator") ?: 9
+                    ))
+                    .build()
+            )
+        )
       } else {
         result.success(activity.enterPictureInPictureMode())
       }

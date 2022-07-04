@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Add custom aspect ratio support
+
 ## 1.0.0
 
 * BREAKING: Floating class does not have static members anymore. It should be instantiated before use and dispose afterwards with `dispose()`.

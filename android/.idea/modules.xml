@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/floating.iml" filepath="$PROJECT_DIR$/.idea/modules/floating.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/floating.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/floating.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/floating.main.iml" filepath="$PROJECT_DIR$/.idea/modules/floating.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/floating.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/floating.unitTest.iml" />
     </modules>
   </component>
 </project>
