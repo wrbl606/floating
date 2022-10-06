@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Fix `java.lang.RuntimeException` caused by an uninitialized `Timer`
+
 ## 1.1.0
 
 * Add custom aspect ratio support
