@@ -1,3 +1,7 @@
+## 1.1.1+1
+
+* Fix showcase GIF link
+
 ## 1.1.1
 
 * Fix `java.lang.RuntimeException` caused by an uninitialized `Timer`
