@@ -2,7 +2,7 @@
 
 Picture in Picture management for Flutter. **Android only**
 
-![Picture in picture demo](assets/example.gif)
+![Picture in picture demo](https://wrbl.xyz/res/floating.gif)
 
 ## App configuration
 
