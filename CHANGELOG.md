@@ -1,3 +1,7 @@
+## 1.1.2
+
+* Bump Kotlin to 1.8.0
+
 ## 1.1.1+1
 
 * Fix showcase GIF link

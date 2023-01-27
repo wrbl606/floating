@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           floatingActionButton: FutureBuilder<bool>(
             future: floating.isPipAvailable,
             initialData: false,
-            builder: (context, snapshot) => snapshot.data
+            builder: (context, snapshot) => snapshot.data ?? false
                 ? PiPSwitcher(
                     childWhenDisabled: FloatingActionButton.extended(
                       onPressed: enablePip,
