@@ -1,3 +1,9 @@
+## 1.1.3
+
+* Drop Kotlin to 1.7.10
+* Bump Gradle to 7.2.0
+* Bump Gradle distributionUrl to 7.5
+
 ## 1.1.2
 
 * Bump Kotlin to 1.8.0
