@@ -67,24 +67,33 @@ class Floating {
   /// by admin or device manufacturer. Also, the device may
   /// have Android version that was released without this feature.
   ///
-  /// Provider [aspectRatio] to override default 16/9 aspect ratio.
+  /// Provide [aspectRatio] to override default 16/9 aspect ratio.
   /// [aspectRatio] must fit into Android-supported values:
   /// min: 1/2.39, max: 2.39/1, otherwise [RationalNotMatchingAndroidRequirementsException]
   /// will be thrown.
   /// Note: this will not make any effect on Android SDK older than 26.
-  Future<PiPStatus> enable(
-      [Rational aspectRatio = const Rational.landscape()]) async {
+  Future<PiPStatus> enable({
+    Rational aspectRatio = const Rational.landscape(),
+    Rectangle<int>? sourceRectHint,
+  }) async {
     if (!aspectRatio.fitsInAndroidRequirements) {
       throw RationalNotMatchingAndroidRequirementsException(aspectRatio);
     }
 
     final bool? enabledSuccessfully = await _channel.invokeMethod(
       'enablePip',
-      aspectRatio.toMap(),
+      {
+        ...aspectRatio.toMap(),
+        if (sourceRectHint != null)
+          'sourceRectHintLTRB': [
+            sourceRectHint.left,
+            sourceRectHint.top,
+            sourceRectHint.right,
+            sourceRectHint.bottom,
+          ],
+      },
     );
-    return enabledSuccessfully ?? false
-        ? PiPStatus.enabled
-        : PiPStatus.unavailable;
+    return enabledSuccessfully ?? false ? PiPStatus.enabled : PiPStatus.unavailable;
   }
 
   // Disposes internal components used to update the [isInPipMode$] stream.
@@ -100,19 +109,21 @@ class Rational {
   final int denominator;
 
   const Rational(this.numerator, this.denominator);
+
   const Rational.square()
       : numerator = 1,
         denominator = 1;
+
   const Rational.landscape()
       : numerator = 16,
         denominator = 9;
+
   const Rational.vertical()
       : numerator = 9,
         denominator = 16;
 
   @override
-  String toString() =>
-      'Rational(numerator: $numerator, denominator: $denominator)';
+  String toString() => 'Rational(numerator: $numerator, denominator: $denominator)';
 
   Map<String, dynamic> toMap() => {
         'numerator': numerator,

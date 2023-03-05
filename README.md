@@ -78,6 +78,6 @@ final statusAfterEnabling = await floating.enable();
 ```
 
 The default 16/9 aspect ratio can be overridden with custom `Rational`.
-Eg. to make PiP square use: `.enable(Rational(1, 1))` or `.enable(Rational.square())`.
+Eg. to make PiP square use: `.enable(aspectRatio: Rational(1, 1))` or `.enable(aspectRatio: Rational.square())`.
 
 When enabled, PiP mode can be toggled off by the user via system UI.

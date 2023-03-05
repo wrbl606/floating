@@ -31,12 +31,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
     if (lifecycleState == AppLifecycleState.inactive) {
-      floating.enable(Rational.square());
+      floating.enable(aspectRatio: Rational.square());
     }
   }
 
   Future<void> enablePip() async {
-    final status = await floating.enable(Rational.landscape());
+    final status = await floating.enable(aspectRatio: Rational.landscape());
     debugPrint('PiP enabled? $status');
   }
 
