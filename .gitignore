@@ -7,3 +7,9 @@
 build/
 
 *.mocks.dart
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
