@@ -49,7 +49,12 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
           )
         val sourceRectHintLTRB = call.argument<List<Int>>("sourceRectHintLTRB")
         if (sourceRectHintLTRB?.size == 4) {
-        val bounds = Rect(sourceRectHintLTRB[0], sourceRectHintLTRB[1], sourceRectHintLTRB[2], sourceRectHintLTRB[3])
+          val bounds = Rect(
+            sourceRectHintLTRB[0],
+            sourceRectHintLTRB[1],
+            sourceRectHintLTRB[2],
+            sourceRectHintLTRB[3]
+          )
           builder.setSourceRectHint(bounds)
         }
         result.success(

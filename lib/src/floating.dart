@@ -109,6 +109,7 @@ class Floating {
 class Rational {
   final int numerator;
   final int denominator;
+  double get aspectRatio => numerator / denominator;
 
   const Rational(this.numerator, this.denominator);
 
