@@ -93,7 +93,9 @@ class Floating {
           ],
       },
     );
-    return enabledSuccessfully ?? false ? PiPStatus.enabled : PiPStatus.unavailable;
+    return enabledSuccessfully ?? false
+        ? PiPStatus.enabled
+        : PiPStatus.unavailable;
   }
 
   // Disposes internal components used to update the [isInPipMode$] stream.
@@ -123,7 +125,8 @@ class Rational {
         denominator = 16;
 
   @override
-  String toString() => 'Rational(numerator: $numerator, denominator: $denominator)';
+  String toString() =>
+      'Rational(numerator: $numerator, denominator: $denominator)';
 
   Map<String, dynamic> toMap() => {
         'numerator': numerator,
