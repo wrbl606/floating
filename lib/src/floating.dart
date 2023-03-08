@@ -14,7 +14,7 @@ class Floating {
   Stream<PiPStatus>? _stream;
 
   Floating({
-    Duration probeInterval = const Duration(milliseconds: 100),
+    Duration probeInterval = const Duration(milliseconds: 10),
   }) : _probeInterval = probeInterval;
 
   /// Confirms or denies PiP availability.

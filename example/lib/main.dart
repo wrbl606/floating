@@ -38,17 +38,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   }
 
   Future<void> enablePip(BuildContext context) async {
-    final rational = Rational.vertical();
+    final rational = Rational.landscape();
     final screenSize =
         MediaQuery.of(context).size * MediaQuery.of(context).devicePixelRatio;
+    final height = screenSize.width ~/ rational.aspectRatio;
 
     final status = await floating.enable(
       aspectRatio: rational,
       sourceRectHint: Rectangle<int>(
         0,
-        0,
+        (screenSize.height ~/ 2) - (height ~/ 2),
         screenSize.width.toInt(),
-        screenSize.width ~/ rational.aspectRatio,
+        height,
       ),
     );
     debugPrint('PiP enabled? $status');
@@ -56,32 +57,27 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Floating example app'),
-          ),
-          body: Center(
-            child: PiPSwitcher(
-              childWhenDisabled: const Text('disabled'),
-              childWhenEnabled: const Text('enabled'),
-            ),
-          ),
-          floatingActionButton: FutureBuilder<bool>(
-            future: floating.isPipAvailable,
-            initialData: false,
-            builder: (context, snapshot) => snapshot.data ?? false
-                ? PiPSwitcher(
-                    childWhenDisabled: FloatingActionButton.extended(
+        theme: ThemeData.dark(),
+        home: PiPSwitcher(
+          childWhenDisabled: Scaffold(
+            body: Center(child: Image.asset('assets/image.jpg')),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
+            floatingActionButton: FutureBuilder<bool>(
+              future: floating.isPipAvailable,
+              initialData: false,
+              builder: (context, snapshot) => snapshot.data ?? false
+                  ? FloatingActionButton.extended(
                       onPressed: () => enablePip(context),
                       label: const Text('Enable PiP'),
                       icon: const Icon(Icons.picture_in_picture),
+                    )
+                  : const Card(
+                      child: Text('PiP unavailable'),
                     ),
-                    childWhenEnabled: const SizedBox(),
-                  )
-                : const Card(
-                    child: Text('PiP unavailable'),
-                  ),
+            ),
           ),
+          childWhenEnabled: Image.asset('assets/image.jpg'),
         ),
       );
 }
