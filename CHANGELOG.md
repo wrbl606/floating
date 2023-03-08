@@ -1,3 +1,12 @@
+## 2.0.0
+
+* Add `sourceRectHint` [support](https://developer.android.com/reference/android/app/PictureInPictureParams.Builder#setSourceRectHint(android.graphics.Rect)).
+
+**Breaking**:
+
+* `.enable(Rational.landscape())` is now `.enable(aspectRatio: Rational.landscape())`
+
+
 ## 1.1.3
 
 * Drop Kotlin to 1.7.10

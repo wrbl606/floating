@@ -4,11 +4,11 @@ import android.app.Activity
 import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.os.Build
 import android.util.Rational
 import androidx.annotation.NonNull
 import androidx.annotation.RequiresApi
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -40,15 +40,25 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     if (call.method == "enablePip") {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        result.success(
-            activity.enterPictureInPictureMode(
-                PictureInPictureParams.Builder()
-                    .setAspectRatio(Rational(
-                        call.argument("numerator") ?: 16,
-                        call.argument("denominator") ?: 9
-                    ))
-                    .build()
+        val builder = PictureInPictureParams.Builder()
+          .setAspectRatio(
+            Rational(
+              call.argument("numerator") ?: 16,
+              call.argument("denominator") ?: 9
             )
+          )
+        val sourceRectHintLTRB = call.argument<List<Int>>("sourceRectHintLTRB")
+        if (sourceRectHintLTRB?.size == 4) {
+          val bounds = Rect(
+            sourceRectHintLTRB[0],
+            sourceRectHintLTRB[1],
+            sourceRectHintLTRB[2],
+            sourceRectHintLTRB[3]
+          )
+          builder.setSourceRectHint(bounds)
+        }
+        result.success(
+            activity.enterPictureInPictureMode(builder.build())
         )
       } else {
         result.success(activity.enterPictureInPictureMode())

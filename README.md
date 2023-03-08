@@ -77,7 +77,18 @@ Possible statuses:
 final statusAfterEnabling = await floating.enable();
 ```
 
-The default 16/9 aspect ratio can be overridden with custom `Rational`.
-Eg. to make PiP square use: `.enable(Rational(1, 1))` or `.enable(Rational.square())`.
-
 When enabled, PiP mode can be toggled off by the user via system UI.
+
+#### `.enable` arguments
+
+##### `aspectRatio:`
+
+The default 16/9 aspect ratio can be overridden with custom `Rational`.
+Eg. to make PiP square use: `.enable(aspectRatio: Rational(1, 1))` or `.enable(aspectRatio: Rational.square())`.
+
+##### `sourceRectHint:`
+
+By default, system will simply use fade animation to tween between full app and PiP.
+Switching animation can be smoother by using source rect hint ([example animation](https://developer.android.com/static/images/pip.mp4)).
+
+Check [the example project](https://github.com/wrbl606/floating/blob/main/example/lib/main.dart) to see an example of usage.

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -31,12 +33,24 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
     if (lifecycleState == AppLifecycleState.inactive) {
-      floating.enable(Rational.square());
+      floating.enable(aspectRatio: Rational.square());
     }
   }
 
-  Future<void> enablePip() async {
-    final status = await floating.enable(Rational.landscape());
+  Future<void> enablePip(BuildContext context) async {
+    final rational = Rational.vertical();
+    final screenSize =
+        MediaQuery.of(context).size * MediaQuery.of(context).devicePixelRatio;
+
+    final status = await floating.enable(
+      aspectRatio: rational,
+      sourceRectHint: Rectangle<int>(
+        0,
+        0,
+        screenSize.width.toInt(),
+        screenSize.width ~/ rational.aspectRatio,
+      ),
+    );
     debugPrint('PiP enabled? $status');
   }
 
@@ -58,7 +72,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             builder: (context, snapshot) => snapshot.data ?? false
                 ? PiPSwitcher(
                     childWhenDisabled: FloatingActionButton.extended(
-                      onPressed: enablePip,
+                      onPressed: () => enablePip(context),
                       label: const Text('Enable PiP'),
                       icon: const Icon(Icons.picture_in_picture),
                     ),
