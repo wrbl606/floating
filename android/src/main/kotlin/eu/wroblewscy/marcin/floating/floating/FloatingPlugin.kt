@@ -36,7 +36,7 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     context = flutterPluginBinding.applicationContext
   }
 
-  @RequiresApi(Build.VERSION_CODES.N)
+  @RequiresApi(Build.VERSION_CODES.O)
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     if (call.method == "enablePip") {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -63,6 +63,37 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
       } else {
         result.success(activity.enterPictureInPictureMode())
       }
+    } else if (call.method == "toggleAutoPip") {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        var autoEnter = call.argument<Boolean>("autoEnter");
+
+        val builder = PictureInPictureParams.Builder()
+            .setAutoEnterEnabled(autoEnter!!)
+            .setAspectRatio(
+              Rational(
+                call.argument("numerator") ?: 16,
+                call.argument("denominator") ?: 9
+              )
+            )
+        val sourceRectHintLTRB = call.argument<List<Int>>("sourceRectHintLTRB")
+        if (sourceRectHintLTRB?.size == 4) {
+          val bounds = Rect(
+            sourceRectHintLTRB[0],
+            sourceRectHintLTRB[1],
+            sourceRectHintLTRB[2],
+            sourceRectHintLTRB[3]
+          )
+          builder.setSourceRectHint(bounds)
+        }
+
+        activity.setPictureInPictureParams(builder.build())
+
+        result.success(true)
+      } else {
+        result.success(false)
+      }
+    } else if (call.method == "autoPipAvailable") {
+      result.success(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
     } else if (call.method == "pipAvailable") {
       result.success(
           activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
