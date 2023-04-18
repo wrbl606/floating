@@ -27,11 +27,7 @@ class Floating {
     return supportsPip ?? false;
   }
 
-  /// Confirms or denies automatic PiP availability.
-  ///
-  /// Automatic PiP may be unavailable because of system settings managed
-  /// by admin or device manufacturer. Also, the device may
-  /// have Android version that was released without this feature.
+  /// Checks if the device supports entering PiP mode automatically
   Future<bool> get isAutoPipAvailable async {
     final bool? supportsAutoPip = await _channel.invokeMethod('autoPipAvailable');
     return supportsAutoPip ?? false;
@@ -108,20 +104,17 @@ class Floating {
         : PiPStatus.unavailable;
   }
 
-  /// Emabled or diables automatic PiP mode.
+  /// Toggles between entering PiP mode automatically or not
   ///
-  /// When enabled, PiP mode automatically starts when the app is
-  /// put into the background and can be ended by the user via system UI.
+  /// The parameters [aspectRatio] and [sourceRectHint] are
+  /// identical to the onces used in the function [enable]
+  /// The parameter [autoEnter] specifies whether to enter PiP
+  /// mode automatically with the given parameters (true) or
+  /// not (false)
   ///
-  /// Automatic PiP may be unavailable because of system settings managed
-  /// by admin or device manufacturer. Also, the device may
-  /// have an Android version that was released without this feature.
-  ///
-  /// Provide [aspectRatio] to override default 16/9 aspect ratio.
-  /// [aspectRatio] must fit into Android-supported values:
-  /// min: 1/2.39, max: 2.39/1, otherwise [RationalNotMatchingAndroidRequirementsException]
-  /// will be thrown.
-  /// Note: this will not have any effect on Android SDK older than 26.
+  /// Note that calling this function will NOT enable PiP mode.
+  /// Instead, it ensures that PiP mode will afterwards be enabled
+  /// automatically whenever the app goes into the background
   Future<bool> toggleAutoPip({
     Rational aspectRatio = const Rational.landscape(),
     Rectangle<int>? sourceRectHint,
