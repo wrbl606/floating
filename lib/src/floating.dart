@@ -29,7 +29,8 @@ class Floating {
 
   /// Checks if the device supports entering PiP mode automatically
   Future<bool> get isAutoPipAvailable async {
-    final bool? supportsAutoPip = await _channel.invokeMethod('autoPipAvailable');
+    final bool? supportsAutoPip =
+        await _channel.invokeMethod('autoPipAvailable');
     return supportsAutoPip ?? false;
   }
 
@@ -115,11 +116,10 @@ class Floating {
   /// Note that calling this function will NOT enable PiP mode.
   /// Instead, it ensures that PiP mode will afterwards be enabled
   /// automatically whenever the app goes into the background
-  Future<bool> toggleAutoPip({
-    Rational aspectRatio = const Rational.landscape(),
-    Rectangle<int>? sourceRectHint,
-    bool? autoEnter
-  }) async {
+  Future<bool> toggleAutoPip(
+      {Rational aspectRatio = const Rational.landscape(),
+      Rectangle<int>? sourceRectHint,
+      bool? autoEnter}) async {
     if (!aspectRatio.fitsInAndroidRequirements) {
       throw RationalNotMatchingAndroidRequirementsException(aspectRatio);
     }
