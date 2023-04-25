@@ -27,6 +27,13 @@ class Floating {
     return supportsPip ?? false;
   }
 
+  /// Checks if the device supports entering PiP mode automatically
+  Future<bool> get isAutoPipAvailable async {
+    final bool? supportsAutoPip =
+        await _channel.invokeMethod('autoPipAvailable');
+    return supportsAutoPip ?? false;
+  }
+
   /// Checks current app PiP status.
   ///
   /// When `false` the app can call [enable] method.
@@ -65,13 +72,13 @@ class Floating {
   ///
   /// PiP may be unavailable because of system settings managed
   /// by admin or device manufacturer. Also, the device may
-  /// have Android version that was released without this feature.
+  /// have an Android version that was released without this feature.
   ///
   /// Provide [aspectRatio] to override default 16/9 aspect ratio.
   /// [aspectRatio] must fit into Android-supported values:
   /// min: 1/2.39, max: 2.39/1, otherwise [RationalNotMatchingAndroidRequirementsException]
   /// will be thrown.
-  /// Note: this will not make any effect on Android SDK older than 26.
+  /// Note: this will not have any effect on Android SDK older than 26.
   Future<PiPStatus> enable({
     Rational aspectRatio = const Rational.landscape(),
     Rectangle<int>? sourceRectHint,
@@ -96,6 +103,43 @@ class Floating {
     return enabledSuccessfully ?? false
         ? PiPStatus.enabled
         : PiPStatus.unavailable;
+  }
+
+  /// Toggles between entering PiP mode automatically or not
+  ///
+  /// The parameters [aspectRatio] and [sourceRectHint] are
+  /// identical to the onces used in the function [enable]
+  /// The parameter [autoEnter] specifies whether to enter PiP
+  /// mode automatically with the given parameters (true) or
+  /// not (false)
+  ///
+  /// Note that calling this function will NOT enable PiP mode.
+  /// Instead, it ensures that PiP mode will afterwards be enabled
+  /// automatically whenever the app goes into the background
+  Future<bool> toggleAutoPip(
+      {Rational aspectRatio = const Rational.landscape(),
+      Rectangle<int>? sourceRectHint,
+      bool? autoEnter}) async {
+    if (!aspectRatio.fitsInAndroidRequirements) {
+      throw RationalNotMatchingAndroidRequirementsException(aspectRatio);
+    }
+
+    final bool? toggledSuccessfully = await _channel.invokeMethod(
+      'toggleAutoPip',
+      {
+        ...aspectRatio.toMap(),
+        if (sourceRectHint != null)
+          'sourceRectHintLTRB': [
+            sourceRectHint.left,
+            sourceRectHint.top,
+            sourceRectHint.right,
+            sourceRectHint.bottom,
+          ],
+        'autoEnter': autoEnter,
+      },
+    );
+
+    return toggledSuccessfully ?? false;
   }
 
   // Disposes internal components used to update the [isInPipMode$] stream.
