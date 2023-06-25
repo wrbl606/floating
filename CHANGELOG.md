@@ -1,3 +1,11 @@
+## 2.0.1
+
+* AGP 8 compatibility
+* JVM target set to 1.8
+* Move from jcenter to mavenCentral
+
+Thanks [@deckerst](https://github.com/deckerst)!
+
 ## 2.0.0
 
 * Add `sourceRectHint` [support](https://developer.android.com/reference/android/app/PictureInPictureParams.Builder#setSourceRectHint(android.graphics.Rect)).
@@ -5,7 +13,6 @@
 **Breaking**:
 
 * `.enable(Rational.landscape())` is now `.enable(aspectRatio: Rational.landscape())`
-
 
 ## 1.1.3
 

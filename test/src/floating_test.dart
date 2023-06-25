@@ -6,9 +6,11 @@ void main() {
   const MethodChannel channel = MethodChannel('floating');
 
   TestWidgetsFlutterBinding.ensureInitialized();
+  final tester =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
 
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
+    tester.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       switch (methodCall.method) {
         case 'pipAvailable':
           return false;
@@ -17,11 +19,12 @@ void main() {
         case 'enablePip':
           return true;
       }
+      return null;
     });
   });
 
   tearDown(() {
-    channel.setMockMethodCallHandler(null);
+    tester.setMockMethodCallHandler(channel, null);
   });
 
   group('check if PiP is available', () {
@@ -30,10 +33,11 @@ void main() {
     });
 
     test('isPipAvailable returns false if platform returned null', () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      tester.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         if (methodCall.method == 'pipAvailable') {
           return null;
         }
+        return null;
       });
       expect((await Floating().isPipAvailable), false);
     });
@@ -41,24 +45,26 @@ void main() {
 
   group('check if app is in PiP mode', () {
     test('pipStatus', () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      tester.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         switch (methodCall.method) {
           case 'inPipAlready':
             return true;
           case 'pipAvailable':
             return true;
         }
+        return null;
       });
       expect(await Floating().pipStatus, PiPStatus.enabled);
     });
 
     test('pipStatus returns PiPStatus.disabled if platform returned null',
         () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      tester.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         switch (methodCall.method) {
           case 'pipAvailable':
             return true;
         }
+        return null;
       });
       expect(await Floating().pipStatus, PiPStatus.disabled);
     });
@@ -66,11 +72,12 @@ void main() {
     test(
         'pipStatus returns PiPStatus.unavailable if platform does not support PiP',
         () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      tester.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         switch (methodCall.method) {
           case 'pipAvailable':
             return false;
         }
+        return null;
       });
       expect(await Floating().pipStatus, PiPStatus.unavailable);
     });
@@ -79,7 +86,7 @@ void main() {
   group('probe if app is in PiP mode', () {
     test('pipStatus\$ skips repeated values', () async {
       int callCount = 0;
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      tester.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         callCount++;
         switch (methodCall.method) {
           case 'inPipAlready':
@@ -87,6 +94,7 @@ void main() {
           case 'pipAvailable':
             return true;
         }
+        return null;
       });
 
       final results = <PiPStatus>[];
@@ -109,11 +117,12 @@ void main() {
 
     test('enablePip returns PiPStatus.unavailable if platform returned null',
         () async {
-      channel.setMockMethodCallHandler((MethodCall methodCall) async {
+      tester.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         switch (methodCall.method) {
           case 'enablePip':
             return null;
         }
+        return null;
       });
       expect(await Floating().enable(), PiPStatus.unavailable);
     });
