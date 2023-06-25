@@ -1,10 +1,10 @@
 name: floating
 description: Picture in Picture mode management for Flutter. Available only for Android.
-version: 2.0.0
+version: 2.0.1
 homepage: https://github.com/wrbl606/floating
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.0 <4.0.0'
   flutter: ">=1.20.0"
 
 dependencies:
