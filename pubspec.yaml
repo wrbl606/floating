@@ -1,7 +1,15 @@
 name: floating
 description: Picture in Picture mode management for Flutter. Available only for Android.
-version: 2.0.1
+version: 2.0.2
 homepage: https://github.com/wrbl606/floating
+screenshots:
+  - description: 'This screenshot shows the transformation from a full-screen application to a movable picture-in-picture form.'
+    path: assets/example.gif
+topics:
+  - widgets
+  - picture-in-picture
+  - android
+  - flutter
 
 environment:
   sdk: '>=2.12.0 <4.0.0'
@@ -15,6 +23,7 @@ dev_dependencies:
   build_runner: ^2.1.8
   flutter_test:
     sdk: flutter
+  lints: ^3.0.0
   mockito: ^5.1.0
 
 flutter:

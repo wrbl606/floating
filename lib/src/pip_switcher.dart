@@ -1,4 +1,4 @@
-part of floating;
+part of '../floating.dart';
 
 /// Widget switching utility.
 ///

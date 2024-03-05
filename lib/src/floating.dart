@@ -1,4 +1,4 @@
-part of floating;
+part of '../floating.dart';
 
 enum PiPStatus { enabled, disabled, unavailable }
 

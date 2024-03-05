@@ -1,3 +1,9 @@
+## 2.0.2
+
+* Update topics
+* Update screenshots
+* Switch to lints_core
+
 ## 2.0.1
 
 * AGP 8 compatibility
