@@ -30,7 +30,7 @@ android {
         namespace 'eu.wroblewscy.marcin.floating.floating'
     }
 
-    compileSdkVersion 30
+    compileSdk 31
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'

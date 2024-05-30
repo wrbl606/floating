@@ -81,6 +81,22 @@ void main() {
       });
       expect(await Floating().pipStatus, PiPStatus.unavailable);
     });
+
+    test('pipStatus returns PiPStatus.automatic if PiP is auto enabled',
+        () async {
+      tester.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+        switch (methodCall.method) {
+          case 'pipAvailable':
+            return true;
+          case 'inPipAlready':
+            return false;
+        }
+        return null;
+      });
+      lastEnableArguments = AutoEnable();
+      expect(await Floating().pipStatus, PiPStatus.automatic);
+      lastEnableArguments = null;
+    });
   });
 
   group('probe if app is in PiP mode', () {
@@ -99,7 +115,7 @@ void main() {
 
       final results = <PiPStatus>[];
       final floating = Floating();
-      await floating.pipStatus$.firstWhere((status) {
+      await floating.pipStatusStream.firstWhere((status) {
         results.add(status);
         return status == PiPStatus.disabled;
       });
@@ -112,7 +128,7 @@ void main() {
 
   group('enabling PiP mode', () {
     test('enablePip', () async {
-      expect(await Floating().enable(), PiPStatus.enabled);
+      expect(await Floating().enable(EnableManual()), PiPStatus.enabled);
     });
 
     test('enablePip returns PiPStatus.unavailable if platform returned null',
@@ -124,7 +140,7 @@ void main() {
         }
         return null;
       });
-      expect(await Floating().enable(), PiPStatus.unavailable);
+      expect(await Floating().enable(EnableManual()), PiPStatus.unavailable);
     });
   });
 }

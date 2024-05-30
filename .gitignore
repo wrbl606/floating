@@ -13,3 +13,6 @@ build/
 *.ipr
 *.iws
 .idea/
+
+coverage/
+full_coverage_test.dart

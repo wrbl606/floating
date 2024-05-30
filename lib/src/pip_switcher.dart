@@ -47,7 +47,7 @@ class _PipAwareState extends State<PiPSwitcher> {
 
   @override
   Widget build(BuildContext context) => StreamBuilder(
-        stream: _floating.pipStatus$,
+        stream: _floating.pipStatusStream,
         initialData: PiPStatus.disabled,
         builder: (context, snapshot) => snapshot.data == PiPStatus.enabled
             ? widget.childWhenEnabled

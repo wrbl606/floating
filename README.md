@@ -1,5 +1,7 @@
 # floating
 
+[![codecov](https://codecov.io/gh/wrbl606/floating/graph/badge.svg?token=C41QR8ZOEP)](https://codecov.io/gh/wrbl606/floating)
+
 Picture in Picture management for Flutter. **Android only**
 
 ![Picture in picture demo](https://wrbl.xyz/res/floating.gif)
@@ -69,17 +71,26 @@ Possible statuses:
 | ------ | ----------- | ------------------------------ |
 | disabled | PiP is available to use but currently disabled. | Yes |
 | enabled | PiP is enabled. The app can display content but will not receive user inputs until the user decides to bring the app to it's full size. | No |
+| automatic | PiP will be enabled automatically by the OS. | Yes |
 | unavailable | PiP is disabled on given device. | No |
 
 ### Enable PiP mode
 
+Enable PiP right away:
+
 ```dart
-final statusAfterEnabling = await floating.enable();
+final statusAfterEnabling = await floating.enable(EnableManual());
+```
+
+Enable PiP when the app gets minimized via system gesture:
+
+```dart
+final statusAfterEnabling = await floating.enable(AutoEnable());
 ```
 
 When enabled, PiP mode can be toggled off by the user via system UI.
 
-#### `.enable` arguments
+#### Arguments
 
 ##### `aspectRatio:`
 

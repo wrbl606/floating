@@ -1,6 +1,23 @@
 part of '../floating.dart';
 
-enum PiPStatus { enabled, disabled, unavailable }
+enum PiPStatus {
+  /// App is currently shrank to PiP.
+  enabled,
+
+  /// App is currently not floating over others.
+  disabled,
+
+  /// App will shrink once the user will try to minimize the app.
+  automatic,
+
+  /// PiP mode is not available on this device.
+  unavailable,
+}
+
+/// Have to be shared between all [Floating] instances to understand
+/// if the [PiPStatus.automatic] was configured.
+@visibleForTesting
+EnableArguments? lastEnableArguments;
 
 /// Manages app picture in picture mode.
 ///
@@ -40,8 +57,15 @@ class Floating {
     if (!await isPipAvailable) {
       return PiPStatus.unavailable;
     }
+
     final bool? inPipAlready = await _channel.invokeMethod('inPipAlready');
-    return inPipAlready ?? false ? PiPStatus.enabled : PiPStatus.disabled;
+    if (inPipAlready ?? false) {
+      return PiPStatus.enabled;
+    }
+
+    final isAutoEnabled = lastEnableArguments is AutoEnable;
+
+    return isAutoEnabled ? PiPStatus.automatic : PiPStatus.disabled;
   }
 
   // Notifies about changes of the PiP mode.
@@ -50,10 +74,16 @@ class Floating {
   // The probing interval can be configured in the constructor.
   //
   // This stream will call listeners only when the value changed.
-  Stream<PiPStatus> get pipStatus$ {
+  Stream<PiPStatus> get pipStatusStream {
     _timer ??= Timer.periodic(
       _probeInterval,
-      (_) async => _controller.add(await pipStatus),
+      (_) async {
+        final currentStatus = await pipStatus;
+        if (_controller.isClosed) {
+          return;
+        }
+        _controller.add(currentStatus);
+      },
     );
     _stream ??= _controller.stream.asBroadcastStream();
     return _stream!.distinct();
@@ -67,15 +97,24 @@ class Floating {
   /// by admin or device manufacturer. Also, the device may
   /// have Android version that was released without this feature.
   ///
-  /// Provide [aspectRatio] to override default 16/9 aspect ratio.
-  /// [aspectRatio] must fit into Android-supported values:
-  /// min: 1/2.39, max: 2.39/1, otherwise [RationalNotMatchingAndroidRequirementsException]
-  /// will be thrown.
+  /// See [EnableManual] and [AutoEnable] to understand available [arguments].
+  ///
   /// Note: this will not make any effect on Android SDK older than 26.
-  Future<PiPStatus> enable({
-    Rational aspectRatio = const Rational.landscape(),
-    Rectangle<int>? sourceRectHint,
-  }) async {
+  Future<PiPStatus> enable(EnableArguments arguments) async {
+    lastEnableArguments = arguments;
+    final (aspectRatio, sourceRectHint, autoEnable) = switch (arguments) {
+      EnableManual(:final aspectRatio, :final sourceRectHint) => (
+          aspectRatio,
+          sourceRectHint,
+          false,
+        ),
+      AutoEnable(:final aspectRatio, :final sourceRectHint) => (
+          aspectRatio,
+          sourceRectHint,
+          true,
+        ),
+    };
+
     if (!aspectRatio.fitsInAndroidRequirements) {
       throw RationalNotMatchingAndroidRequirementsException(aspectRatio);
     }
@@ -91,6 +130,7 @@ class Floating {
             sourceRectHint.right,
             sourceRectHint.bottom,
           ],
+        'autoEnable': autoEnable,
       },
     );
     return enabledSuccessfully ?? false

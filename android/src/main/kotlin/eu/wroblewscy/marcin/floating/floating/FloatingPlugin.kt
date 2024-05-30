@@ -57,6 +57,23 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
           )
           builder.setSourceRectHint(bounds)
         }
+
+
+        val autoEnable = call.argument<Boolean>("autoEnable") ?: false
+        if (autoEnable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+          builder.setAutoEnterEnabled(true)
+          activity.setPictureInPictureParams(builder.build())
+          result.success(true)
+          return
+        } else if (autoEnable && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+          result.error(
+            "AutoEnable not available",
+            "AutoEnable is only available on SDK higher than 31",
+            "Current SDK: ${Build.VERSION.SDK_INT}, required: >=31"
+          )
+          return
+        }
+
         result.success(
             activity.enterPictureInPictureMode(builder.build())
         )
@@ -71,7 +88,8 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
       result.success(
           activity.isInPictureInPictureMode
       )
-    } else {
+    } else
+     {
       result.notImplemented()
     }
   }

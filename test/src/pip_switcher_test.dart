@@ -25,7 +25,7 @@ void main() {
             ),
           );
 
-          when(mockFloating.pipStatus$)
+          when(mockFloating.pipStatusStream)
               .thenAnswer((_) => Stream.value(PiPStatus.enabled));
           await tester.pumpWidget(widget);
           await tester.pumpAndSettle();
@@ -48,7 +48,7 @@ void main() {
             ),
           );
 
-          when(mockFloating.pipStatus$)
+          when(mockFloating.pipStatusStream)
               .thenAnswer((_) => Stream.value(PiPStatus.disabled));
           await tester.pumpWidget(widget);
           await tester.pumpAndSettle();
@@ -71,7 +71,7 @@ void main() {
             ),
           );
 
-          when(mockFloating.pipStatus$)
+          when(mockFloating.pipStatusStream)
               .thenAnswer((_) => Stream.value(PiPStatus.unavailable));
           await tester.pumpWidget(widget);
           await tester.pumpAndSettle();

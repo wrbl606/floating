@@ -5,17 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "floating",
-      "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "floating (profile mode)",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
       "name": "example",
       "cwd": "example",
       "request": "launch",

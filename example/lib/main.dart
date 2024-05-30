@@ -14,44 +14,45 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class _MyAppState extends State<MyApp> {
   final floating = Floating();
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     floating.dispose();
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
-    if (lifecycleState == AppLifecycleState.inactive) {
-      floating.enable(aspectRatio: Rational.square());
-    }
-  }
-
-  Future<void> enablePip(BuildContext context) async {
+  Future<void> enablePip(
+    BuildContext context, {
+    bool autoEnable = false,
+  }) async {
     final rational = Rational.landscape();
     final screenSize =
         MediaQuery.of(context).size * MediaQuery.of(context).devicePixelRatio;
     final height = screenSize.width ~/ rational.aspectRatio;
 
-    final status = await floating.enable(
-      aspectRatio: rational,
-      sourceRectHint: Rectangle<int>(
-        0,
-        (screenSize.height ~/ 2) - (height ~/ 2),
-        screenSize.width.toInt(),
-        height,
-      ),
-    );
+    final arguments = autoEnable
+        ? AutoEnable(
+            aspectRatio: rational,
+            sourceRectHint: Rectangle<int>(
+              0,
+              (screenSize.height ~/ 2) - (height ~/ 2),
+              screenSize.width.toInt(),
+              height,
+            ),
+          )
+        : EnableManual(
+            aspectRatio: rational,
+            sourceRectHint: Rectangle<int>(
+              0,
+              (screenSize.height ~/ 2) - (height ~/ 2),
+              screenSize.width.toInt(),
+              height,
+            ),
+          );
+
+    final status = await floating.enable(arguments);
     debugPrint('PiP enabled? $status');
   }
 
@@ -67,10 +68,20 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               future: floating.isPipAvailable,
               initialData: false,
               builder: (context, snapshot) => snapshot.data ?? false
-                  ? FloatingActionButton.extended(
-                      onPressed: () => enablePip(context),
-                      label: const Text('Enable PiP'),
-                      icon: const Icon(Icons.picture_in_picture),
+                  ? Column(
+                      children: [
+                        FloatingActionButton.extended(
+                          onPressed: () => enablePip(context),
+                          label: const Text('Enable PiP'),
+                          icon: const Icon(Icons.picture_in_picture),
+                        ),
+                        const SizedBox(height: 12),
+                        FloatingActionButton.extended(
+                          onPressed: () => enablePip(context, autoEnable: true),
+                          label: const Text('Enable PiP on app minimize'),
+                          icon: const Icon(Icons.auto_awesome),
+                        ),
+                      ],
                     )
                   : const Card(
                       child: Text('PiP unavailable'),

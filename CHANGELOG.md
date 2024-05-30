@@ -1,3 +1,10 @@
+## 3.0.0
+
+* *BREAKING* `.enable()` is now `enable(EnableManual())`
+* Enter automatic PiP mode on app minimize via `enable(AutoEnable())`
+* *BREAKING* `pipStatus$` is now `pipStatusStream`
+
+
 ## 2.0.2
 
 * Update topics
