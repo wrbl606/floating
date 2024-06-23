@@ -26,10 +26,10 @@ sealed class EnableArguments {
 /// To be used when the app shall shrink on a direct user action in
 /// the app's UI.
 ///
-/// See [AutoEnable], shall the app should enter the PiP mode automatically
+/// See [OnLeavePiP], shall the app should enter the PiP mode automatically
 /// upon system-side action, e.g. on Home navigation gesture.
-class EnableManual extends EnableArguments {
-  const EnableManual({
+class ImmediatePiP extends EnableArguments {
+  const ImmediatePiP({
     super.aspectRatio = const Rational.landscape(),
     super.sourceRectHint,
   });
@@ -40,11 +40,11 @@ class EnableManual extends EnableArguments {
 /// To be used when the app shall shrink on an indirect user action,
 /// e.g. on Home navigation gesture.
 ///
-/// See [EnableManual] if the app should enter PiP immediately.
+/// See [ImmediatePiP] if the app should enter PiP immediately.
 ///
 ///
-class AutoEnable extends EnableArguments {
-  const AutoEnable({
+class OnLeavePiP extends EnableArguments {
+  const OnLeavePiP({
     super.aspectRatio = const Rational.landscape(),
     super.sourceRectHint,
   });

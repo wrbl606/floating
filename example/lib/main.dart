@@ -17,12 +17,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final floating = Floating();
 
-  @override
-  void dispose() {
-    floating.dispose();
-    super.dispose();
-  }
-
   Future<void> enablePip(
     BuildContext context, {
     bool autoEnable = false,
@@ -33,7 +27,7 @@ class _MyAppState extends State<MyApp> {
     final height = screenSize.width ~/ rational.aspectRatio;
 
     final arguments = autoEnable
-        ? AutoEnable(
+        ? OnLeavePiP(
             aspectRatio: rational,
             sourceRectHint: Rectangle<int>(
               0,
@@ -42,7 +36,7 @@ class _MyAppState extends State<MyApp> {
               height,
             ),
           )
-        : EnableManual(
+        : ImmediatePiP(
             aspectRatio: rational,
             sourceRectHint: Rectangle<int>(
               0,

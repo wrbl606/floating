@@ -6,9 +6,7 @@ part of '../floating.dart';
 /// or [childWhenDisabled] widget.
 class PiPSwitcher extends StatefulWidget {
   /// Floating instance that the listener will connect to.
-  ///
-  /// It may be provided by the instance user. If not, the widget
-  /// will create it's own Floating instance.
+  @visibleForTesting
   final Floating? floating;
 
   /// Child to render when PiP is enabled
@@ -29,21 +27,7 @@ class PiPSwitcher extends StatefulWidget {
 }
 
 class _PipAwareState extends State<PiPSwitcher> {
-  late final Floating _floating = widget.floating ?? Floating();
-
-  @override
-  void dispose() {
-    /// Dispose the floating instance only if it was created
-    /// by this widget.
-    ///
-    /// Floating instance can be also provided by the user of this
-    /// widget. If so, it's the user's responsibility to dispose
-    /// it when necessary.
-    if (widget.floating == null) {
-      _floating.dispose();
-    }
-    super.dispose();
-  }
+  late final _floating = widget.floating ?? Floating();
 
   @override
   Widget build(BuildContext context) => StreamBuilder(

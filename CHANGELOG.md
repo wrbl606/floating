@@ -1,3 +1,11 @@
+## 4.0.0
+
+* *BREAKING* `EnableManual` is now `ImmediatePiP`
+* *BREAKING* `AutoEnable` is now `OnLeavePiP`
+* *BREAKING* `.dispose()` is no longer available, as the `Floating()` constructor returns a singleton now
+* Cancel `OnLeavePiP` instructions via `cancelOnLeavePiP` method
+
+
 ## 3.0.0
 
 * *BREAKING* `.enable()` is now `enable(EnableManual())`

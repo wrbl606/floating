@@ -14,11 +14,6 @@ enum PiPStatus {
   unavailable,
 }
 
-/// Have to be shared between all [Floating] instances to understand
-/// if the [PiPStatus.automatic] was configured.
-@visibleForTesting
-EnableArguments? lastEnableArguments;
-
 /// Manages app picture in picture mode.
 ///
 /// PiP mode in is available only in Android.
@@ -26,13 +21,24 @@ EnableArguments? lastEnableArguments;
 class Floating {
   final _channel = const MethodChannel('floating');
   final _controller = StreamController<PiPStatus>();
-  final Duration _probeInterval;
+  final _probeInterval = const Duration(milliseconds: 10);
+
+  /// Have to be shared between all [Floating] instances to understand
+  /// if the [PiPStatus.automatic] was configured.
+  @visibleForTesting
+  EnableArguments? lastEnableArguments;
+
   Timer? _timer;
   Stream<PiPStatus>? _stream;
 
-  Floating({
-    Duration probeInterval = const Duration(milliseconds: 10),
-  }) : _probeInterval = probeInterval;
+  static final _singleton = Floating._internal();
+
+  /// Facilities Floating singleton access.
+  ///
+  /// PiP settings are global anyway, no point of making this instanceable.
+  factory Floating() => _singleton;
+
+  Floating._internal();
 
   /// Confirms or denies PiP availability.
   ///
@@ -63,7 +69,7 @@ class Floating {
       return PiPStatus.enabled;
     }
 
-    final isAutoEnabled = lastEnableArguments is AutoEnable;
+    final isAutoEnabled = lastEnableArguments is OnLeavePiP;
 
     return isAutoEnabled ? PiPStatus.automatic : PiPStatus.disabled;
   }
@@ -97,18 +103,18 @@ class Floating {
   /// by admin or device manufacturer. Also, the device may
   /// have Android version that was released without this feature.
   ///
-  /// See [EnableManual] and [AutoEnable] to understand available [arguments].
+  /// See [ImmediatePiP] and [OnLeavePiP] to understand available [arguments].
   ///
   /// Note: this will not make any effect on Android SDK older than 26.
   Future<PiPStatus> enable(EnableArguments arguments) async {
     lastEnableArguments = arguments;
     final (aspectRatio, sourceRectHint, autoEnable) = switch (arguments) {
-      EnableManual(:final aspectRatio, :final sourceRectHint) => (
+      ImmediatePiP(:final aspectRatio, :final sourceRectHint) => (
           aspectRatio,
           sourceRectHint,
           false,
         ),
-      AutoEnable(:final aspectRatio, :final sourceRectHint) => (
+      OnLeavePiP(:final aspectRatio, :final sourceRectHint) => (
           aspectRatio,
           sourceRectHint,
           true,
@@ -119,6 +125,10 @@ class Floating {
       throw RationalNotMatchingAndroidRequirementsException(aspectRatio);
     }
 
+    // Cancel any previous settings in case it would interfere with the
+    // current ones, e.g. current one is ImmediatePiP but OnLeavePiP
+    // was called before.
+    await cancelOnLeavePiP();
     final bool? enabledSuccessfully = await _channel.invokeMethod(
       'enablePip',
       {
@@ -138,10 +148,10 @@ class Floating {
         : PiPStatus.unavailable;
   }
 
-  // Disposes internal components used to update the [isInPipMode$] stream.
-  void dispose() {
-    _timer?.cancel();
-    _controller.close();
+  /// Cancels current picture-in-picture setup for [OnLeavePiP]
+  Future<void> cancelOnLeavePiP() {
+    lastEnableArguments = null;
+    return _channel.invokeMethod('cancelAutoEnable');
   }
 }
 

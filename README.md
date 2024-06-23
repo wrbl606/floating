@@ -4,7 +4,7 @@
 
 Picture in Picture management for Flutter. **Android only**
 
-![Picture in picture demo](https://wrbl.xyz/res/floating.gif)
+<image src="https://wrbl.xyz/floating-example.gif" alt="Picture in picture demo" width="60%" style="margin-left: 20%;">
 
 ## App configuration
 
@@ -42,13 +42,6 @@ the platforms adds native support for such feature.
 final floating = Floating();
 ```
 
-When you're done with the PiP functionality, make sure you're
-disposing the instance:
-
-```dart
-floating.dispose();
-```
-
 ### Check if PiP is available
 
 ```dart
@@ -79,14 +72,16 @@ Possible statuses:
 Enable PiP right away:
 
 ```dart
-final statusAfterEnabling = await floating.enable(EnableManual());
+final statusAfterEnabling = await floating.enable(ImmediatePiP());
 ```
 
 Enable PiP when the app gets minimized via system gesture:
 
 ```dart
-final statusAfterEnabling = await floating.enable(AutoEnable());
+final statusAfterEnabling = await floating.enable(OnLeavePiP());
 ```
+
+To later cancel, use `.cancelOnLeavePiP()`.
 
 When enabled, PiP mode can be toggled off by the user via system UI.
 

@@ -30,14 +30,14 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
   private lateinit var context: Context
   private lateinit var activity: Activity
 
-  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "floating")
     channel.setMethodCallHandler(this)
     context = flutterPluginBinding.applicationContext
   }
 
   @RequiresApi(Build.VERSION_CODES.N)
-  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+  override fun onMethodCall(call: MethodCall, result: Result) {
     if (call.method == "enablePip") {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val builder = PictureInPictureParams.Builder()
@@ -67,8 +67,8 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
           return
         } else if (autoEnable && Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
           result.error(
-            "AutoEnable not available",
-            "AutoEnable is only available on SDK higher than 31",
+            "OnLeavePiP not available",
+            "OnLeavePiP is only available on SDK higher than 31",
             "Current SDK: ${Build.VERSION.SDK_INT}, required: >=31"
           )
           return
@@ -88,13 +88,20 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
       result.success(
           activity.isInPictureInPictureMode
       )
+    } else if (call.method == "cancelAutoEnable") {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        activity.setPictureInPictureParams(PictureInPictureParams.Builder()
+          .setAutoEnterEnabled(false).build())
+        result.success(true)
+        return
+      }
     } else
      {
       result.notImplemented()
     }
   }
 
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
   }
 
@@ -110,7 +117,7 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
 
   override fun onDetachedFromActivityForConfigChanges() {}
 
-  fun useBinding(binding: ActivityPluginBinding) {
+  private fun useBinding(binding: ActivityPluginBinding) {
     activity = binding.activity
   }
 }
