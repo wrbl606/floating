@@ -93,10 +93,10 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
         activity.setPictureInPictureParams(PictureInPictureParams.Builder()
           .setAutoEnterEnabled(false).build())
         result.success(true)
-        return
+      } else {
+        result.success(false)
       }
-    } else
-     {
+    } else {
       result.notImplemented()
     }
   }
