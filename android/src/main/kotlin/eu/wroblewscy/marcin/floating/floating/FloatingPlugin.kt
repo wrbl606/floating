@@ -92,9 +92,8 @@ class FloatingPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         activity.setPictureInPictureParams(PictureInPictureParams.Builder()
           .setAutoEnterEnabled(false).build())
-        result.success(true)
-        return
       }
+      result.success(true)
     } else
      {
       result.notImplemented()
