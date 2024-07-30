@@ -1,3 +1,7 @@
+## 4.0.1
+
+* Fix for SDK versions not supporting auto-enabled PiP
+
 ## 4.0.0
 
 * *BREAKING* `EnableManual` is now `ImmediatePiP`
