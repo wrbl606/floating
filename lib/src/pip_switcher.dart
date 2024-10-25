@@ -15,12 +15,20 @@ class PiPSwitcher extends StatefulWidget {
   /// Child to render when PiP is disabled or unavailable.
   final Widget childWhenDisabled;
 
-  PiPSwitcher({
-    Key? key,
+  /// Switch animation's duration.
+  final Duration duration;
+
+  /// Switch animation's curve.
+  final Curve curve;
+
+  const PiPSwitcher({
+    super.key,
     required this.childWhenEnabled,
     required this.childWhenDisabled,
+    this.duration = const Duration(milliseconds: 200),
+    this.curve = Curves.easeOutCubic,
     this.floating,
-  }) : super(key: key);
+  });
 
   @override
   State<PiPSwitcher> createState() => _PipAwareState();
@@ -33,8 +41,13 @@ class _PipAwareState extends State<PiPSwitcher> {
   Widget build(BuildContext context) => StreamBuilder(
         stream: _floating.pipStatusStream,
         initialData: PiPStatus.disabled,
-        builder: (context, snapshot) => snapshot.data == PiPStatus.enabled
-            ? widget.childWhenEnabled
-            : widget.childWhenDisabled,
+        builder: (context, snapshot) => AnimatedSwitcher(
+          duration: widget.duration,
+          switchInCurve: widget.curve,
+          switchOutCurve: widget.curve,
+          child: snapshot.data == PiPStatus.enabled
+              ? widget.childWhenEnabled
+              : widget.childWhenDisabled,
+        ),
       );
 }

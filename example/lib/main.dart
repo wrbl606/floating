@@ -10,11 +10,13 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
-  _MyAppState createState() => _MyAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class MyAppState extends State<MyApp> {
   final floating = Floating();
 
   Future<void> enablePip(
@@ -63,6 +65,7 @@ class _MyAppState extends State<MyApp> {
               initialData: false,
               builder: (context, snapshot) => snapshot.data ?? false
                   ? Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         FloatingActionButton.extended(
                           onPressed: () => enablePip(context),

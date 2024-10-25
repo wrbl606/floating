@@ -1,3 +1,9 @@
+# 5.0.0
+
+* *BREAKING* Switch to declarative Gradle plugin setup
+* Add switching animation to `PiPSwitcher`
+* Follow rules from `flutter_lints: ^5.0.0`
+
 ## 4.0.1
 
 * Fix for SDK versions not supporting auto-enabled PiP
