@@ -4,7 +4,7 @@
 
 Picture in Picture management for Flutter. **Android only**
 
-<image src="https://wrbl.xyz/floating-example.gif" alt="Picture in picture demo" width="60%" style="margin-left: 20%;">
+<image src="https://wrbl.xyz/floating-example.gif" alt="Picture in picture demo" width="40%">
 
 ## App configuration
 

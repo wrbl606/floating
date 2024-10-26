@@ -15,13 +15,11 @@
 * *BREAKING* `.dispose()` is no longer available, as the `Floating()` constructor returns a singleton now
 * Cancel `OnLeavePiP` instructions via `cancelOnLeavePiP` method
 
-
 ## 3.0.0
 
 * *BREAKING* `.enable()` is now `enable(EnableManual())`
 * Enter automatic PiP mode on app minimize via `enable(AutoEnable())`
 * *BREAKING* `pipStatus$` is now `pipStatusStream`
-
 
 ## 2.0.2
 
