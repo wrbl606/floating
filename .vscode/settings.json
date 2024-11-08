@@ -1,5 +1,6 @@
 {
-    "files.autoSave": "onFocusChange",
-    "editor.tabSize": 2,
-    "editor.formatOnSave": true
+  "files.autoSave": "onFocusChange",
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "dart.flutterSdkPath": ".fvm/versions/3.24.4"
 }

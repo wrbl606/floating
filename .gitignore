@@ -16,3 +16,6 @@ build/
 
 coverage/
 full_coverage_test.dart
+
+# FVM Version Cache
+.fvm/
