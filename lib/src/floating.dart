@@ -30,10 +30,18 @@ class Floating {
 
   Timer? _timer;
   Stream<PiPStatus>? _stream;
-
   bool? _isPipAvailable;
 
   static final _singleton = Floating._internal();
+
+  @visibleForTesting
+  void reset() {
+    lastEnableArguments = null;
+    _timer?.cancel();
+    _timer = null;
+    _stream = null;
+    _isPipAvailable = null;
+  }
 
   /// Facilities Floating singleton access.
   ///
