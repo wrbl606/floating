@@ -31,6 +31,8 @@ class Floating {
   Timer? _timer;
   Stream<PiPStatus>? _stream;
 
+  bool? _isPipAvailable;
+
   static final _singleton = Floating._internal();
 
   /// Facilities Floating singleton access.
@@ -46,8 +48,8 @@ class Floating {
   /// by admin or device manufacturer. Also, the device may
   /// have Android version that was released without this feature.
   Future<bool> get isPipAvailable async {
-    final bool? supportsPip = await _channel.invokeMethod('pipAvailable');
-    return supportsPip ?? false;
+    _isPipAvailable ??= await _channel.invokeMethod('pipAvailable');
+    return _isPipAvailable ?? false;
   }
 
   /// Checks current app PiP status.
