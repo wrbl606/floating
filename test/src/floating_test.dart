@@ -24,6 +24,7 @@ void main() {
   });
 
   tearDown(() {
+    Floating().reset();
     tester.setMockMethodCallHandler(channel, null);
   });
 

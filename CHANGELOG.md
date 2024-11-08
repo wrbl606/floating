@@ -1,4 +1,10 @@
-# 5.0.0
+## 5.0.1
+
+* Avoid excessive `hasSystemFeature` calls
+ 
+Thanks [@yoer](https://github.com/yoer)!
+
+## 5.0.0
 
 * *BREAKING* Switch to declarative Gradle plugin setup
 * Add switching animation to `PiPSwitcher`
