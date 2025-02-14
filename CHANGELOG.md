@@ -1,3 +1,9 @@
+## 6.0.0
+
+* Fix builds on Flutter 3.29+
+ 
+Thanks [@deckerst](https://github.com/deckerst)!
+
 ## 5.0.1
 
 * Avoid excessive `hasSystemFeature` calls
