@@ -117,7 +117,6 @@ class Floating {
   ///
   /// Note: this will not make any effect on Android SDK older than 26.
   Future<PiPStatus> enable(EnableArguments arguments) async {
-    lastEnableArguments = arguments;
     final (aspectRatio, sourceRectHint, autoEnable) = switch (arguments) {
       ImmediatePiP(:final aspectRatio, :final sourceRectHint) => (
           aspectRatio,
@@ -139,6 +138,11 @@ class Floating {
     // current ones, e.g. current one is ImmediatePiP but OnLeavePiP
     // was called before.
     await cancelOnLeavePiP();
+
+    // Moved this here as setting it on the first line does not make sense since
+    // it will be overridden by the cancelOnLeavePiP call.
+    lastEnableArguments = arguments;
+
     final bool? enabledSuccessfully = await _channel.invokeMethod(
       'enablePip',
       {
