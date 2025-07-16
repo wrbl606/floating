@@ -137,12 +137,12 @@ class Floating {
     // Cancel any previous settings in case it would interfere with the
     // current ones, e.g. current one is ImmediatePiP but OnLeavePiP
     // was called before.
-    await cancelOnLeavePiP();
-
-    // Moved this here as setting it on the first line does not make sense since
-    // it will be overridden by the cancelOnLeavePiP call.
-    lastEnableArguments = arguments;
-
+    try {
+      await cancelOnLeavePiP();
+    } finally {
+      // Ensure lastEnableArguments is always set, even if cancelOnLeavePiP throws.
+      lastEnableArguments = arguments;
+    }
     final bool? enabledSuccessfully = await _channel.invokeMethod(
       'enablePip',
       {
