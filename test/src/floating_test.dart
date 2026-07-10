@@ -161,8 +161,8 @@ void main() {
       RationalNotMatchingAndroidRequirementsException(
         invalidRational,
       ).toString().contains(
-        '${invalidRational.numerator}/${invalidRational.denominator}',
-      ),
+            '${invalidRational.numerator}/${invalidRational.denominator}',
+          ),
       isTrue,
     );
   });

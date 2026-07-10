@@ -117,15 +117,15 @@ class Floating {
     lastEnableArguments = arguments;
     final (aspectRatio, sourceRectHint, autoEnable) = switch (arguments) {
       ImmediatePiP(:final aspectRatio, :final sourceRectHint) => (
-        aspectRatio,
-        sourceRectHint,
-        false,
-      ),
+          aspectRatio,
+          sourceRectHint,
+          false,
+        ),
       OnLeavePiP(:final aspectRatio, :final sourceRectHint) => (
-        aspectRatio,
-        sourceRectHint,
-        true,
-      ),
+          aspectRatio,
+          sourceRectHint,
+          true,
+        ),
     };
 
     if (!aspectRatio.fitsInAndroidRequirements) {
@@ -167,20 +167,26 @@ class Rational {
 
   const Rational(this.numerator, this.denominator);
 
-  const Rational.square() : numerator = 1, denominator = 1;
+  const Rational.square()
+      : numerator = 1,
+        denominator = 1;
 
-  const Rational.landscape() : numerator = 16, denominator = 9;
+  const Rational.landscape()
+      : numerator = 16,
+        denominator = 9;
 
-  const Rational.vertical() : numerator = 9, denominator = 16;
+  const Rational.vertical()
+      : numerator = 9,
+        denominator = 16;
 
   @override
   String toString() =>
       'Rational(numerator: $numerator, denominator: $denominator)';
 
   Map<String, dynamic> toMap() => {
-    'numerator': numerator,
-    'denominator': denominator,
-  };
+        'numerator': numerator,
+        'denominator': denominator,
+      };
 }
 
 /// Extension for [Rational] to confirm whether Android aspect ration
@@ -206,8 +212,7 @@ class RationalNotMatchingAndroidRequirementsException implements Exception {
   RationalNotMatchingAndroidRequirementsException(this.rational);
 
   @override
-  String toString() =>
-      'RationalNotMatchingAndroidRequirementsException('
+  String toString() => 'RationalNotMatchingAndroidRequirementsException('
       '${rational.numerator}/${rational.denominator} does not fit into '
       'Android-supported aspect ratios. Boundaries: '
       'min: 1/2.39, max: 2.39/1. '
