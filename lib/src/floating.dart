@@ -91,16 +91,13 @@ class Floating {
   //
   // This stream will call listeners only when the value changed.
   Stream<PiPStatus> get pipStatusStream {
-    _timer ??= Timer.periodic(
-      _probeInterval,
-      (_) async {
-        final currentStatus = await pipStatus;
-        if (_controller.isClosed) {
-          return;
-        }
-        _controller.add(currentStatus);
-      },
-    );
+    _timer ??= Timer.periodic(_probeInterval, (_) async {
+      final currentStatus = await pipStatus;
+      if (_controller.isClosed) {
+        return;
+      }
+      _controller.add(currentStatus);
+    });
     _stream ??= _controller.stream.asBroadcastStream();
     return _stream!.distinct();
   }
@@ -139,20 +136,17 @@ class Floating {
     // current ones, e.g. current one is ImmediatePiP but OnLeavePiP
     // was called before.
     await cancelOnLeavePiP();
-    final bool? enabledSuccessfully = await _channel.invokeMethod(
-      'enablePip',
-      {
-        ...aspectRatio.toMap(),
-        if (sourceRectHint != null)
-          'sourceRectHintLTRB': [
-            sourceRectHint.left,
-            sourceRectHint.top,
-            sourceRectHint.right,
-            sourceRectHint.bottom,
-          ],
-        'autoEnable': autoEnable,
-      },
-    );
+    final bool? enabledSuccessfully = await _channel.invokeMethod('enablePip', {
+      ...aspectRatio.toMap(),
+      if (sourceRectHint != null)
+        'sourceRectHintLTRB': [
+          sourceRectHint.left,
+          sourceRectHint.top,
+          sourceRectHint.right,
+          sourceRectHint.bottom,
+        ],
+      'autoEnable': autoEnable,
+    });
     return enabledSuccessfully ?? false
         ? PiPStatus.enabled
         : PiPStatus.unavailable;
